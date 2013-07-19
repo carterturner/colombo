@@ -5,6 +5,12 @@ module Colombo
 
     attr_accessor :id, :name, :image_id, :size_id, :region_id
     attr_accessor :backups_active, :ip_address, :status
+    
+    def self.find(client, id)
+      client.request(:get, "/droplets/#{id}") do |response|
+        return self.new(client, response['droplet'])
+      end
+    end
 
     def reboot
       @client.request(:get, "/droplets/#{self.id}/reboot/") do |response|
