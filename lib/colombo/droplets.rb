@@ -20,14 +20,15 @@ module Colombo
         raise "Required `#{key}` attribute" if not options.include?( key )
       end
 
-      if not options[:ssh_keys].nil?
-        options[:ssh_keys] = options[:ssh_keys].join(',')
+      if options[:ssh_key_ids]
+        options[:ssh_key_ids] = options[:ssh_key_ids].join(',')
       end
-
+      
+      droplet = nil
       @client.request(:get, '/droplets/new', options) do |response|
-        puts response
+        droplet = Droplet.new(@client, response['droplet'])
       end
-
+      droplet
     end
 
   end
